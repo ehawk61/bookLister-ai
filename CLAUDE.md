@@ -9,30 +9,37 @@ bookLister-ai is a Go project. The `.gitignore` is configured for Go binaries, t
 ## Commands
 
 ```bash
-# Build
-go build ./...
+# Build (from middleware-api/)
+cd middleware-api && go build ./...
 
-# Run tests
-go test ./...
+# Run tests (from middleware-api/)
+cd middleware-api && go test ./...
 
 # Run a single test
-go test ./path/to/package -run TestName
+cd middleware-api && go test ./path/to/package -run TestName
 
 # Lint (install golangci-lint if not present)
-golangci-lint run
+cd middleware-api && golangci-lint run
 ```
 
 ## Architecture
 
+All Go source lives under `middleware-api/`.
+
 ### Entry Point
 
-- `cmd/server/main.go` — HTTP server, wires middleware and routes, listens on `PORT` (default `8080`)
+- `middleware-api/cmd/server/main.go` — HTTP server, wires middleware and routes, listens on `PORT` (default `8080`)
 
 ### Core Packages
 
-- `internal/handler` — HTTP handler functions (e.g. `Healthcheck`)
-- `internal/middleware` — HTTP middleware (`CorrelationID`, `APIVersion`)
-- `internal/response` — Shared response helpers (`ErrorResponse`, `WriteError`)
+- `middleware-api/internal/handler` — HTTP handler functions (e.g. `Healthcheck`)
+- `middleware-api/internal/middleware` — HTTP middleware (`CorrelationID`, `APIVersion`)
+- `middleware-api/internal/response` — Shared response helpers (`ErrorResponse`, `WriteError`)
+
+### API Routes
+
+All endpoints are prefixed with `/api`. Current routes:
+- `GET /api/healthcheck` — returns `{"status":"ok"}`
 
 ### Middleware Chain
 

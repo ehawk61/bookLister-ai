@@ -11,7 +11,7 @@ import (
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthcheck", handler.Healthcheck)
+	mux.HandleFunc("GET /api/healthcheck", handler.Healthcheck)
 
 	chain := middleware.CorrelationID(middleware.APIVersion(mux))
 

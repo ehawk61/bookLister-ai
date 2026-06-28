@@ -10,7 +10,7 @@ import (
 )
 
 func TestHealthcheck(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/healthcheck", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/healthcheck", nil)
 	w := httptest.NewRecorder()
 
 	Healthcheck(w, req)
@@ -34,11 +34,11 @@ func TestHealthcheck(t *testing.T) {
 
 func TestHealthcheckWithMiddlewareChain(t *testing.T) {
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /healthcheck", Healthcheck)
+	mux.HandleFunc("GET /api/healthcheck", Healthcheck)
 	chain := middleware.CorrelationID(middleware.APIVersion(mux))
 
 	t.Run("valid request", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/healthcheck", nil)
+		req := httptest.NewRequest(http.MethodGet, "/api/healthcheck", nil)
 		req.Header.Set("X-Correlation-ID", "550e8400-e29b-41d4-a716-446655440000")
 		w := httptest.NewRecorder()
 
@@ -65,7 +65,7 @@ func TestHealthcheckWithMiddlewareChain(t *testing.T) {
 	})
 
 	t.Run("missing correlation ID returns 400", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/healthcheck", nil)
+		req := httptest.NewRequest(http.MethodGet, "/api/healthcheck", nil)
 		w := httptest.NewRecorder()
 
 		chain.ServeHTTP(w, req)
