@@ -24,8 +24,20 @@ golangci-lint run
 
 ## Architecture
 
-This repository is in early setup — no application code exists yet. As the codebase grows, update this section with:
-- Entry points (e.g. `cmd/` binaries)
-- Core packages and their responsibilities
-- External dependencies and integrations (APIs, databases)
-- Configuration and environment variable conventions
+### Entry Point
+
+- `cmd/server/main.go` — HTTP server, wires middleware and routes, listens on `PORT` (default `8080`)
+
+### Core Packages
+
+- `internal/handler` — HTTP handler functions (e.g. `Healthcheck`)
+- `internal/middleware` — HTTP middleware (`CorrelationID`, `APIVersion`)
+- `internal/response` — Shared response helpers (`ErrorResponse`, `WriteError`)
+
+### Middleware Chain
+
+Requests pass through: `CorrelationID` → `APIVersion` → handler. The correlation ID middleware is outermost and rejects requests missing a valid UUIDv4 `X-Correlation-ID` header.
+
+### Configuration
+
+- `PORT` env var — server listen port (default `8080`)
